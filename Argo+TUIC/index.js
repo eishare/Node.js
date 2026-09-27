@@ -79,7 +79,7 @@ if (totalMemMB <= 160) {
 
 const GO_BASE_ENV = {
   ...process.env,
-  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go", 
+  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,scavengeindex=0", 
   GOMAXPROCS: process.env.GOMAXPROCS || dynamicProcs,
   GOGC: process.env.GOGC || dynamicGOGC
 };
