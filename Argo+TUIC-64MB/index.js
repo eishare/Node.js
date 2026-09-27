@@ -44,7 +44,7 @@ const iataMap = {
 
 const GO_BASE_ENV = {
   ...process.env,
-  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go",
+  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,scavengeindex=0",
   GOMAXPROCS: "1",
   GOGC: "18"
 };
