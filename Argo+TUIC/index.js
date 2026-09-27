@@ -15,7 +15,7 @@ const ARGO_DOMAIN = process.env.ARGO_DOMAIN || "";                             /
 
 const ARGO_AUTH = process.env.ARGO_AUTH || "";                                 // 固定隧道 Token
 
-const CFIP = process.env.CFIP || "www.wto.org";                                // 优选域名（ www.visa.co.jp  usa.visa.com  www.visa.com.hk  www.shopify.com ) 
+const CFIP = process.env.CFIP || "www.visa.co.jp";                             // 优选域名（ www.wto.org  usa.visa.com  www.visa.com.hk  www.shopify.com ) 
 
 
 // ============================ 变量设置完成 ===============================
@@ -79,7 +79,7 @@ if (totalMemMB <= 160) {
 
 const GO_BASE_ENV = {
   ...process.env,
-  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,scavengeindex=0", 
+  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,scavengeindex=0",
   GOMAXPROCS: process.env.GOMAXPROCS || dynamicProcs,
   GOGC: process.env.GOGC || dynamicGOGC
 };
@@ -92,19 +92,16 @@ if (!fs.existsSync(FILE_PATH)) fs.mkdirSync(FILE_PATH, { recursive: true });
 const uuidFilePath = path.join(FILE_PATH, "uuid.txt");
 const tuicPwdFilePath = path.join(FILE_PATH, "tuic_password.txt");
 
-let TUIC_PASSWORD = process.env.TUIC_PASSWORD || (fs.existsSync(tuicPwdFilePath) && fs.readFileSync(tuicPwdFilePath, "utf-8").trim());
-if (!TUIC_PASSWORD) {
-  TUIC_PASSWORD = crypto.randomBytes(16).toString("hex");
-  try { fs.writeFileSync(tuicPwdFilePath, TUIC_PASSWORD, "utf-8"); } catch (e) {}
-}
+const seed = process.env.MACHINE_SEED || os.hostname() || "fixed-seed";
 
-let UUID = process.env.UUID || (fs.existsSync(uuidFilePath) && fs.readFileSync(uuidFilePath, "utf-8").trim());
-if (!UUID) {
-  UUID = (crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString("hex")).toLowerCase();
-  try { fs.writeFileSync(uuidFilePath, UUID, "utf-8"); } catch (e) {}
-} else {
-  UUID = UUID.toLowerCase();
-}
+const genPwd = (s) => crypto.createHash("sha256").update(s + "-tuic").digest("hex").slice(0, 32);
+const genUUID = (s) => {
+  const h = crypto.createHash("md5").update(s + "-uuid").digest("hex");
+  return `${h.slice(0,8)}-${h.slice(8,12)}-4${h.slice(13,16)}-${(parseInt(h.slice(16,18), 16) & 0x3f | 0x80).toString(16)}${h.slice(18,20)}-${h.slice(20,32)}`;
+};
+
+let TUIC_PASSWORD = process.env.TUIC_PASSWORD || (fs.existsSync(tuicPwdFilePath) && fs.readFileSync(tuicPwdFilePath, "utf-8").trim()) || genPwd(seed);
+let UUID = (process.env.UUID || (fs.existsSync(uuidFilePath) && fs.readFileSync(uuidFilePath, "utf-8").trim()) || genUUID(seed)).toLowerCase();
 const WS_PATH = `/${UUID}-vless`;
 
 function downloadFile(urlStr, targetPath) {
