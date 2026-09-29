@@ -73,7 +73,7 @@ if (totalMemMB <= 160) {
 } else {
   singboxMemLimit = "256MiB";
   cloudflaredMemLimit = "512MiB";
-  dynamicGOGC = "100";
+  dynamicGOGC = "220";
   dynamicProcs = process.env.GOMAXPROCS || "4"; 
 }
 
