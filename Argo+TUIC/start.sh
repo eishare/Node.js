@@ -17,10 +17,8 @@ export NODE_NO_WARNINGS=1
 
 MEM_BYTES=0
 if [ -f "/sys/fs/cgroup/memory.max" ]; then
-    # cgroup v2
     MEM_BYTES=$(cat /sys/fs/cgroup/memory.max 2>/dev/null)
 elif [ -f "/sys/fs/cgroup/memory/memory.limit_in_bytes" ]; then
-    # cgroup v1
     MEM_BYTES=$(cat /sys/fs/cgroup/memory/memory.limit_in_bytes 2>/dev/null)
 fi
 
@@ -35,23 +33,29 @@ if [ -z "$TOTAL_RAM_MB" ] || [ "$TOTAL_RAM_MB" -eq 0 ]; then
 fi
 
 if [ "$TOTAL_RAM_MB" -lt 160 ]; then
-    NODE_MEM=32
+    NODE_MEM=18
+    NODE_FLAGS="--optimize-for-size"
 elif [ "$TOTAL_RAM_MB" -lt 256 ]; then
-    NODE_MEM=64
+    NODE_MEM=40
+    NODE_FLAGS="--optimize-for-size"
 elif [ "$TOTAL_RAM_MB" -lt 320 ]; then
-    NODE_MEM=96
+    NODE_MEM=64
+    NODE_FLAGS="--optimize-for-size"
 elif [ "$TOTAL_RAM_MB" -lt 448 ]; then
-    NODE_MEM=128
+    NODE_MEM=80
+    NODE_FLAGS=""
 elif [ "$TOTAL_RAM_MB" -lt 576 ]; then
-    NODE_MEM=160
+    NODE_MEM=80
+    NODE_FLAGS=""
 else
     NODE_MEM=256
+    NODE_FLAGS=""
 fi
 
 echo "[INFO] 检测到系统/容器内存: ${TOTAL_RAM_MB}MB | Node.js 堆上限设为: ${NODE_MEM}MB"
 echo "[INFO] 启动 Argo + TUIC 主程序 (index.js)..."
 
-NODE_CMD="node --max-old-space-size=${NODE_MEM} index.js"
+NODE_CMD="node --max-old-space-size=${NODE_MEM} ${NODE_FLAGS} index.js"
 
 while true; do
     $NODE_CMD
