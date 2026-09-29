@@ -287,7 +287,8 @@ async function main() {
     }
   ],
   strategy: "prefer_ipv4",
-  independent_cache: false
+  independent_cache: true,  
+  cache_capacity: 512  
     },
     inbounds: inbounds,
     outbounds: [{ type: "direct", tag: "direct", udp_fragment: true }],
