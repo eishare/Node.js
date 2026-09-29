@@ -53,7 +53,7 @@ if (totalMemMB <= 160) {
 } else if (totalMemMB < 256) {
   singboxMemLimit = "50MiB";
   cloudflaredMemLimit = "130MiB";
-  dynamicGOGC = "40";
+  dynamicGOGC = "100";
   dynamicProcs = "1";
 } else if (totalMemMB < 352) {
   singboxMemLimit = "60MiB";
