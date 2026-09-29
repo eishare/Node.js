@@ -55,15 +55,15 @@ if (totalMemMB <= 160) {
   cloudflaredMemLimit = "130MiB";
   dynamicGOGC = "40";
   dynamicProcs = "1";
-} else if (totalMemMB < 320) {
+} else if (totalMemMB < 352) {
   singboxMemLimit = "60MiB";
-  cloudflaredMemLimit = "160MiB";
-  dynamicGOGC = "60";
+  cloudflaredMemLimit = "180MiB";
+  dynamicGOGC = "150";
   dynamicProcs = "1";
 } else if (totalMemMB < 448) {
   singboxMemLimit = "90MiB";
-  cloudflaredMemLimit = "220MiB";
-  dynamicGOGC = "90";
+  cloudflaredMemLimit = "200MiB";
+  dynamicGOGC = "160";
   dynamicProcs = "1";
 } else if (totalMemMB < 576) {
   singboxMemLimit = "100MiB";
