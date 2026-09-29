@@ -38,7 +38,7 @@ if [ "$TOTAL_RAM_MB" -lt 160 ]; then
 elif [ "$TOTAL_RAM_MB" -lt 256 ]; then
     NODE_MEM=40
     NODE_FLAGS="--optimize-for-size"
-elif [ "$TOTAL_RAM_MB" -lt 320 ]; then
+elif [ "$TOTAL_RAM_MB" -lt 352 ]; then
     NODE_MEM=64
     NODE_FLAGS="--optimize-for-size"
 elif [ "$TOTAL_RAM_MB" -lt 448 ]; then
