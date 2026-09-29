@@ -3,19 +3,19 @@
 // =================== Argo + TUIC 变量设置区域 开始 =======================
 
 
-const TUIC_PORT = process.env.TUIC_PORT || "";                                 // TUIC 端口（留空=不部署）
+const TUIC_PORT = process.env.TUIC_PORT || "";                                  // TUIC 端口（留空=不部署）
 
-const ARGO_PORT = process.env.ARGO_PORT || "8001";                             // Argo回源端口填入8001 （留空=不部署：临时/固定隧道）
+const ARGO_PORT = process.env.ARGO_PORT || "8001";                              // Argo回源端口填入8001 （留空=不部署：临时/固定隧道）
 
-const ARGO_PROTOCOL = process.env.ARGO_PROTOCOL || "quic";                     // http2或quic（http2=稳定+低占用；quic=响应快+占用略高）
+const ARGO_PROTOCOL = process.env.ARGO_PROTOCOL || "quic";                      // http2或quic（http2=稳定+低占用；quic=响应快+占用略高）
 
-const ARGO_CONNECTIONS = process.env.ARGO_CONNECTIONS || "1";                  // 隧道连接数量 建议http2≤4，quic=1 （多条UDP会增加占用，也可能会触发机房QoS）
+const ARGO_CONNECTIONS = process.env.ARGO_CONNECTIONS || "1";                   // 隧道连接数量 建议http2≤4，quic=1 （多条UDP会增加占用，也可能会触发机房QoS）
 
-const ARGO_DOMAIN = process.env.ARGO_DOMAIN || "";                             // 固定隧道域名
+const ARGO_DOMAIN = process.env.ARGO_DOMAIN || "";                              // 固定隧道域名
 
-const ARGO_AUTH = process.env.ARGO_AUTH || "";                                 // 固定隧道 Token
+const ARGO_AUTH = process.env.ARGO_AUTH || "";                                  // 固定隧道 Token
 
-const CFIP = process.env.CFIP || "www.visa.co.jp";                             // 优选域名（ www.wto.org  usa.visa.com  www.visa.com.hk  www.shopify.com ) 
+const CFIP = process.env.CFIP || "www.visa.co.jp";                              // 优选域名（ www.wto.org  usa.visa.com  www.visa.com.hk  www.shopify.com ) 
 
 
 // ============================ 变量设置完成 ===============================
@@ -46,40 +46,40 @@ const totalMemMB = Math.round(os.totalmem() / 1024 / 1024);
 let singboxMemLimit, cloudflaredMemLimit, dynamicGOGC, dynamicProcs;
 
 if (totalMemMB <= 160) {
-  singboxMemLimit = "30MiB";
-  cloudflaredMemLimit = "50MiB";
-  dynamicGOGC = "100";
+  singboxMemLimit = "35MiB";
+  cloudflaredMemLimit = "75MiB";
+  dynamicGOGC = "30";
   dynamicProcs = "1";
 } else if (totalMemMB < 256) {
-  singboxMemLimit = "80MiB";
-  cloudflaredMemLimit = "140MiB";
-  dynamicGOGC = "100";
+  singboxMemLimit = "50MiB";
+  cloudflaredMemLimit = "130MiB";
+  dynamicGOGC = "40";
   dynamicProcs = "1";
 } else if (totalMemMB < 320) {
-  singboxMemLimit = "128MiB";
-  cloudflaredMemLimit = "220MiB";
-  dynamicGOGC = "100";
+  singboxMemLimit = "60MiB";
+  cloudflaredMemLimit = "160MiB";
+  dynamicGOGC = "50";
   dynamicProcs = "1";
 } else if (totalMemMB < 448) {
-  singboxMemLimit = "160MiB";
-  cloudflaredMemLimit = "320MiB";
-  dynamicGOGC = "100";
+  singboxMemLimit = "90MiB";
+  cloudflaredMemLimit = "220MiB";
+  dynamicGOGC = "50";
   dynamicProcs = "1";
-} else if (totalMemMB < 512) {
-  singboxMemLimit = "200MiB";
-  cloudflaredMemLimit = "400MiB";
-  dynamicGOGC = "120";
+} else if (totalMemMB < 576) {
+  singboxMemLimit = "120MiB";
+  cloudflaredMemLimit = "280MiB";
+  dynamicGOGC = "60";
   dynamicProcs = "1";
 } else {
-  singboxMemLimit = "384MiB";
-  cloudflaredMemLimit = "768MiB";
+  singboxMemLimit = "256MiB";
+  cloudflaredMemLimit = "512MiB";
   dynamicGOGC = "100";
-  dynamicProcs = process.env.GOMAXPROCS || "1"; 
+  dynamicProcs = process.env.GOMAXPROCS || "4"; 
 }
 
 const GO_BASE_ENV = {
   ...process.env,
-  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,scavengeindex=0",
+  GODEBUG: "madvdontneed=1,cgocheck=0,netdns=go,http2debug=0,scavengeindex=0",
   GOMAXPROCS: process.env.GOMAXPROCS || dynamicProcs,
   GOGC: process.env.GOGC || dynamicGOGC
 };
@@ -208,9 +208,9 @@ async function startCloudflared(argoArgs, isFixedTunnel, setArgoLink, updateSubF
       log("[Argo] 检测到域名与 Token，启动固定隧道...");
     }
 
-    botProc = spawn(botPath, argoArgs, {
-      env: Object.assign({}, GO_BASE_ENV, { GOMEMLIMIT: CLOUDFLARED_MEM_LIMIT }),
-      stdio: ["ignore", "pipe", "pipe"], detached: true
+    botProc = spawn(botPath, [...argoArgs], {
+  env: Object.assign({}, GO_BASE_ENV, { GOMEMLIMIT: CLOUDFLARED_MEM_LIMIT }),
+  stdio: ["ignore", "pipe", "pipe"], detached: true
     });
 
     const activeConnectionsMap = new Map();
@@ -311,7 +311,8 @@ async function main() {
         }
       ],
       strategy: "prefer_ipv4",
-      independent_cache: false
+      independent_cache: true, 
+      cache_capacity: 4096   
     },
     inbounds: inbounds,
     outbounds: [{ type: "direct", tag: "direct", udp_fragment: true }],
@@ -354,7 +355,14 @@ async function main() {
   }
 
   if (enableArgo) {
-    let argoArgs = ["tunnel", "--no-autoupdate", "--protocol", ARGO_PROTOCOL.toLowerCase(), "--ha-connections", ARGO_CONNECTIONS];
+    let argoArgs = [
+  "tunnel", 
+  "--no-autoupdate", 
+  "--retries", "5", 
+  "--grace-period", "1s", 
+  "--protocol", ARGO_PROTOCOL.toLowerCase(), 
+  "--ha-connections", ARGO_CONNECTIONS
+];
     const setArgoLink = (domain) => {
       argoNodeLink = `vless://${UUID}@${CFIP}:${CFPORT}?encryption=none&security=tls&sni=${domain}&fp=chrome&type=ws&host=${domain}&path=${encodeURIComponent(WS_PATH)}#Argo_Easyshare`;
     };
