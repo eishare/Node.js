@@ -51,29 +51,29 @@ if (totalMemMB <= 160) {
   dynamicGOGC = "30";
   dynamicProcs = "1";
 } else if (totalMemMB < 256) {
-  singboxMemLimit = "50MiB";
-  cloudflaredMemLimit = "130MiB";
-  dynamicGOGC = "100";
+  singboxMemLimit = "60MiB";
+  cloudflaredMemLimit = "160MiB";
+  dynamicGOGC = "160";
   dynamicProcs = "1";
 } else if (totalMemMB < 352) {
-  singboxMemLimit = "60MiB";
-  cloudflaredMemLimit = "180MiB";
-  dynamicGOGC = "150";
+  singboxMemLimit = "80MiB";
+  cloudflaredMemLimit = "200MiB";
+  dynamicGOGC = "210";
   dynamicProcs = "1";
 } else if (totalMemMB < 448) {
   singboxMemLimit = "90MiB";
-  cloudflaredMemLimit = "200MiB";
-  dynamicGOGC = "160";
+  cloudflaredMemLimit = "205MiB";
+  dynamicGOGC = "210";
   dynamicProcs = "1";
 } else if (totalMemMB < 576) {
   singboxMemLimit = "100MiB";
-  cloudflaredMemLimit = "230MiB";
-  dynamicGOGC = "200";
+  cloudflaredMemLimit = "210MiB";
+  dynamicGOGC = "210";
   dynamicProcs = "1";
 } else {
   singboxMemLimit = "256MiB";
   cloudflaredMemLimit = "512MiB";
-  dynamicGOGC = "220";
+  dynamicGOGC = "250";
   dynamicProcs = process.env.GOMAXPROCS || "4"; 
 }
 
