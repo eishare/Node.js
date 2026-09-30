@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+{ const w = process.stderr.write; process.stderr.write = (chunk, ...args) => typeof chunk === 'string' && chunk.includes('DeprecationWarning') ? true : w.apply(process.stderr, [chunk, ...args]); }
 
 // =================== Argo + TUIC 变量设置区域 开始 =======================
 
@@ -125,15 +126,27 @@ function downloadFile(urlStr, targetPath) {
 }
 
 function getPublicIP() {
-  return new Promise((resolve) => {
-    const req = https.get("https://api.ipify.org", { timeout: 2000 }, (res) => {
+  const overrideIp = process.env.SERVER_IP || process.env.CFIP;
+  if (overrideIp && overrideIp.trim() && overrideIp !== "www.visa.co.jp") {
+    return Promise.resolve(overrideIp.trim());
+  }
+
+  const fetchIP = (url) => new Promise((resolve, reject) => {
+    const req = https.get(url, { timeout: 3500 }, (res) => {
       let data = "";
-      res.on("data", (chunk) => data += chunk);
-      res.on("end", () => resolve(data.trim() || "127.0.0.1"));
+      res.on("data", (c) => data += c);
+      res.on("end", () => {
+        const ip = data.trim();
+        ip ? resolve(ip) : reject(new Error("Empty"));
+      });
     });
-    req.on("error", () => resolve("127.0.0.1"));
-    req.on("timeout", () => { req.destroy(); resolve("127.0.0.1"); });
+    req.on("error", reject);
+    req.on("timeout", () => { req.destroy(); reject(new Error("Timeout")); });
   });
+
+  return fetchIP("https://api.ipify.org")
+    .catch(() => fetchIP("https://ipv4.icanhazip.com"))
+    .catch(() => "127.0.0.1");
 }
 
 function generateCertificates(keyPath, certPath) {
