@@ -1,0 +1,11 @@
+{
+  "name": "argo-xHTTP+TUIC-easyshare",
+  "version": "1.0.0",
+  "description": "Sing-box dual tunnel script",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {}
+}
