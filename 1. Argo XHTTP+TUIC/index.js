@@ -2,12 +2,12 @@
 { const w = process.stderr.write; process.stderr.write = (chunk, ...args) => typeof chunk === 'string' && chunk.includes('DeprecationWarning') ? true : w.apply(process.stderr, [chunk, ...args]); }
 
 
-// ========= Sing-box TUIC + Argo Xray (xHTTP H2) 固定隧道 变量设置 =========
+// ========= Sing-box TUIC + Argo Xray (xHTTP h2) 固定隧道 变量设置 =========
 
 
 const TUIC_PORT = process.env.TUIC_PORT || "";                                        // TUIC 直连端口（留空=不部署）
 
-const ARGO_PORT = process.env.ARGO_PORT || "8001";                                    // Argo回源端口（必须与 DOMAIN/AUTH 同时具备才部署）
+const ARGO_PORT = process.env.ARGO_PORT || "8001";                                    // 固定隧道回源端口（与服务URL端口一致 http://127.0.0.1:8001）
 
 const ARGO_DOMAIN = process.env.ARGO_DOMAIN || "";                                    // 固定隧道域名（必须与 PORT/AUTH 同时具备才部署）
 
@@ -17,7 +17,7 @@ const ARGO_PROTOCOL = process.env.ARGO_PROTOCOL || "quic";                      
  
 const ARGO_CONNECTIONS = process.env.ARGO_CONNECTIONS || "1";                         // 隧道连接数量 建议http2≤4，quic=1
 
-const CFIP = process.env.CFIP || "www.teamviewer.com";                                // 优选域名（备选 www.wto.org  usa.visa.com  www.visa.com.hk  www.shopify.com ) 
+const CFIP = process.env.CFIP || "www.teamviewer.com";                                // 优选域名（备选 www.visa.com.hk  usa.visa.com  www.wto.org  www.shopify.com ) 
 
 
 // ============================ 变量设置完成 ===============================
@@ -483,8 +483,10 @@ async function main() {
 
     await startCloudflared(argoArgs);
 
-    const argoLink = `vless://${UUID}@${CFIP}:${CFPORT}?encryption=none&security=tls&alpn=h2&sni=${domainTrim}&fp=chrome&type=xhttp&mode=auto&host=${domainTrim}&path=${encodeURIComponent(XHTTP_PATH)}#Argo_xHTTP_easyshare`;
-    globalLinks.push(argoLink);
+    const argoLinkH2 = `vless://${UUID}@${CFIP}:${CFPORT}?encryption=none&security=tls&alpn=h2&sni=${domainTrim}&fp=chrome&type=xhttp&mode=auto&host=${domainTrim}&path=${encodeURIComponent(XHTTP_PATH)}#h2_argo_easyshare`;
+const argoLinkH3 = `vless://${UUID}@${CFIP}:${CFPORT}?encryption=none&security=tls&alpn=h3&sni=${domainTrim}&fp=chrome&type=xhttp&mode=auto&host=${domainTrim}&path=${encodeURIComponent(XHTTP_PATH)}#h3_argo_easyshare`;
+globalLinks.push(argoLinkH2);
+globalLinks.push(argoLinkH3);
   } else {
     log("[初始化] 缺失变量 (PORT/DOMAIN/AUTH)，已放弃部署 Argo 固定隧道。");
   }
