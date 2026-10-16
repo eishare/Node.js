@@ -42,9 +42,9 @@
 | **Zenix.sg** | `1 GB` / `5 GB` / `50%` | 🔄 维持账号活跃度 | ⏳ 目前正在队列等待中... |⏳ 漫长排队等待 |
 | **Bot Hosting** | `256 MB` / `1 GB` / `20%` | 🔄 每月消耗40金币<br>🟡 赚取金币已下线 |❌不开放 7844 端口<br>❌不支持Argo |🟡 免费模式已到期 |
 | **Pella.app** | `100 MB` / `5 GB` / `10%` | 🔄 每 24 小时手动续期 |❌不开放 TCP/UDP 端口<br>✅**推荐xHTTP版Argo隧道+H3模式， http2+2条以下连接，避免停机** |🟡 偶尔不稳定<br> 🟡停机后restart即可 |
-| **Lunes Host** | `128 MB` / `512 MB` / `15%` | 🔄 每 15 天登录控制台=续期 |✅推荐TUIC或xHTTP版Argo隧道+H3模式|🟢 正常 |
-| **Katabump** | `308 MB` / `716 MB` / `25%` | 🔄 每 4 天手动续期 |✅推荐TUIC或xHTTP版Argo隧道+H3模式|🟢 正常 |
-| **host-ship** | `512 MB` / `1 GB` / `50%` | 🔄 手动续费，最长30天 |✅推荐TUIC或xHTTP版Argo隧道+H3模式|🟢 正常 |
+| **Lunes Host** | `128 MB` / `512 MB` / `15%` | 🔄 每 15 天登录控制台=续期 |✅推荐xHTTP版Argo隧道+H3模式，备选TUIC|🟢 正常 |
+| **Katabump** | `308 MB` / `716 MB` / `25%` | 🔄 每 4 天手动续期 |✅推荐xHTTP版Argo隧道+H3模式，备选TUIC|🟢 正常 |
+| **host-ship** | `512 MB` / `1 GB` / `50%` | 🔄 手动续费，最长30天 |✅推荐xHTTP版Argo隧道+H3模式，备选TUIC|🟢 正常 |
 
 
 > 📌 **提示**：部分托管平台对 TCP / UDP 端口及代理协议（如 Cloudflare Argo）有严格限制，部署前请仔细核对平台规则。
