@@ -1,7 +1,7 @@
 ## 1. ✔ 最新xHTTP版Argo+TUIC方案：xHTTP抗封锁升级、H3(UDP)告别晚高峰龟速：
 
 * **xHTTP(h3)Argo隧道**：手动切换http2/quic、隧道连接数；Cloudflare CDN边缘节点可见。
-                         h3标准UDP传输，突破晚高峰TCP拥塞
+                         xHTTP上下行h3标准UDP传输，突破封锁、晚高峰TCP拥塞
 
 * **极限精简与优化**：6级自适应匹配 + 主动内存回收机制。
 
