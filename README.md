@@ -12,7 +12,7 @@
   * TUIC：本地TCP拥塞严重、晚高峰拥塞时段。
 
 
-## 2 & 3. 💡 双模Argo + TUIC方案：IP被墙、抗封锁、晚高峰UDP直连 黄金组合：
+## 2/3. 💡 双模Argo + TUIC方案：IP被墙、抗封锁、晚高峰UDP直连 黄金组合：
 
   
 * **TCP/UDP双模 Argo隧道**：手动切换http2/quic、隧道连接数；Cloudflare CDN边缘节点可见。
