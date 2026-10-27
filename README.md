@@ -58,7 +58,7 @@
 |4| **Pella.app** | `100 MB` / `5 GB` / `10%` | 🔄 每 24 小时手动续期 |❌不开放 TCP/UDP 端口<br>✅**推荐xHTTP版Argo隧道+H3模式， 隧道协议必须：http2** |🟡 遇停机restart即可|
 |5| **Lunes Host** | `128 MB` / `512 MB` / `15%` | 🔄 每 15 天登录控制台=续期 |✅推荐xHTTP版Argo隧道+H3模式，隧道协议quic，备选TUIC|🟢 正常 |
 |6| **Katabump** | `308 MB` / `716 MB` / `25%` | 🔄 每 4 天手动续期 |✅推荐xHTTP版Argo隧道+H3模式，隧道协议quic，备选TUIC|🟢 正常 |
-|7| **host-ship** | `512 MB` / `1 GB` / `50%` | 🔄 手动续费，最长30天 |✅推荐xHTTP版Argo隧道+H3模式，隧道协议quic，备选TUIC|🟢 正常 |
+|7| **host-ship** | `512 MB` / `1 GB` / `50%` | 🔄 手动续费，最长30天 |🟡疑似已对UDP封堵✅推荐xHTTP版Argo隧道+H3模式，隧道协议http2x4条连接|🟡 直连UDP封堵 |
 |8| **botkeep.cloud** | `512 MB` / `512 MB` / `50%` | 🔄 测试中 |✅限期开放，选择Discord bot；直连节点地址替换：node7.botkeep.cloud|❌ 封代理 |
 
 
