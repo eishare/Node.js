@@ -78,3 +78,8 @@
 
 </details>
 
+---
+
+### 📈 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=eishare/Node.js&type=Date)](https://star-history.com/#eishare/Node.js&Date)
